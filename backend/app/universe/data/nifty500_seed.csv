@@ -1,0 +1,81 @@
+symbol,name,industry
+RELIANCE,Reliance Industries Ltd,Energy
+TCS,Tata Consultancy Services Ltd,IT
+HDFCBANK,HDFC Bank Ltd,Financial Services
+ICICIBANK,ICICI Bank Ltd,Financial Services
+INFY,Infosys Ltd,IT
+HINDUNILVR,Hindustan Unilever Ltd,FMCG
+ITC,ITC Ltd,FMCG
+SBIN,State Bank of India,Financial Services
+BHARTIARTL,Bharti Airtel Ltd,Telecom
+KOTAKBANK,Kotak Mahindra Bank Ltd,Financial Services
+LT,Larsen & Toubro Ltd,Construction
+AXISBANK,Axis Bank Ltd,Financial Services
+BAJFINANCE,Bajaj Finance Ltd,Financial Services
+ASIANPAINT,Asian Paints Ltd,Consumer Durables
+MARUTI,Maruti Suzuki India Ltd,Automobile
+HCLTECH,HCL Technologies Ltd,IT
+SUNPHARMA,Sun Pharmaceutical Industries Ltd,Healthcare
+TITAN,Titan Company Ltd,Consumer Durables
+ULTRACEMCO,UltraTech Cement Ltd,Construction Materials
+WIPRO,Wipro Ltd,IT
+NESTLEIND,Nestle India Ltd,FMCG
+ONGC,Oil & Natural Gas Corporation Ltd,Energy
+NTPC,NTPC Ltd,Power
+POWERGRID,Power Grid Corporation of India Ltd,Power
+TATAMOTORS,Tata Motors Ltd,Automobile
+TATASTEEL,Tata Steel Ltd,Metals
+ADANIENT,Adani Enterprises Ltd,Metals
+ADANIPORTS,Adani Ports and SEZ Ltd,Services
+COALINDIA,Coal India Ltd,Energy
+BAJAJFINSV,Bajaj Finserv Ltd,Financial Services
+HDFCLIFE,HDFC Life Insurance Company Ltd,Financial Services
+SBILIFE,SBI Life Insurance Company Ltd,Financial Services
+GRASIM,Grasim Industries Ltd,Construction Materials
+JSWSTEEL,JSW Steel Ltd,Metals
+INDUSINDBK,IndusInd Bank Ltd,Financial Services
+TECHM,Tech Mahindra Ltd,IT
+DRREDDY,Dr Reddys Laboratories Ltd,Healthcare
+CIPLA,Cipla Ltd,Healthcare
+BRITANNIA,Britannia Industries Ltd,FMCG
+EICHERMOT,Eicher Motors Ltd,Automobile
+HEROMOTOCO,Hero MotoCorp Ltd,Automobile
+BAJAJ-AUTO,Bajaj Auto Ltd,Automobile
+DIVISLAB,Divis Laboratories Ltd,Healthcare
+APOLLOHOSP,Apollo Hospitals Enterprise Ltd,Healthcare
+TATACONSUM,Tata Consumer Products Ltd,FMCG
+BPCL,Bharat Petroleum Corporation Ltd,Energy
+HINDALCO,Hindalco Industries Ltd,Metals
+LTIM,LTIMindtree Ltd,IT
+PIDILITIND,Pidilite Industries Ltd,Chemicals
+DABUR,Dabur India Ltd,FMCG
+GODREJCP,Godrej Consumer Products Ltd,FMCG
+MARICO,Marico Ltd,FMCG
+SIEMENS,Siemens Ltd,Capital Goods
+HAVELLS,Havells India Ltd,Consumer Durables
+AMBUJACEM,Ambuja Cements Ltd,Construction Materials
+DLF,DLF Ltd,Realty
+VEDL,Vedanta Ltd,Metals
+GAIL,GAIL India Ltd,Energy
+IOC,Indian Oil Corporation Ltd,Energy
+BANKBARODA,Bank of Baroda,Financial Services
+PNB,Punjab National Bank,Financial Services
+CANBK,Canara Bank,Financial Services
+ICICIPRULI,ICICI Prudential Life Insurance Ltd,Financial Services
+SHRIRAMFIN,Shriram Finance Ltd,Financial Services
+CHOLAFIN,Cholamandalam Investment and Finance Ltd,Financial Services
+TRENT,Trent Ltd,Consumer Services
+NAUKRI,Info Edge India Ltd,Consumer Services
+ZOMATO,Zomato Ltd,Consumer Services
+PAYTM,One97 Communications Ltd,Financial Services
+INDIGO,InterGlobe Aviation Ltd,Services
+TATAPOWER,Tata Power Company Ltd,Power
+ADANIGREEN,Adani Green Energy Ltd,Power
+ADANIPOWER,Adani Power Ltd,Power
+PFC,Power Finance Corporation Ltd,Financial Services
+RECLTD,REC Ltd,Financial Services
+BEL,Bharat Electronics Ltd,Capital Goods
+HAL,Hindustan Aeronautics Ltd,Capital Goods
+IRCTC,Indian Railway Catering & Tourism Corp Ltd,Services
+BOSCHLTD,Bosch Ltd,Automobile
+MOTHERSON,Samvardhana Motherson International Ltd,Automobile
