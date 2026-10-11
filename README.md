@@ -11,12 +11,18 @@ API, a SQLAlchemy/SQLite/Postgres data layer, and a Next.js/TypeScript/Tailwind
 trading terminal — not a mockup.
 
 > **Honesty notes (read these).**
-> - Live trading is **disabled by default**. The Dhan and MetaTrader 5 adapters are
->   real interface scaffolds that stay disabled until credentials/terminals are
->   configured; they never fabricate a connection, price, balance or fill.
+> - Live trading is **disabled by default**. The **Dhan** adapter now makes real
+>   DhanHQ v2 calls (candles, fund limit, orders, positions) once you add your
+>   credentials on the in-app **Connections** page; the MetaTrader 5 adapter is a
+>   scaffold. Neither fabricates a connection, price, balance or fill — unconfigured
+>   or failing calls raise a clear error.
 > - The default market-data provider is a **synthetic generator** so the whole
->   system runs offline. Synthetic data is always labelled as such in the UI and
->   API. No simulated price, balance, order or P&amp;L is ever presented as real.
+>   system runs offline. Switch to the **Dhan live feed** from Connections once
+>   configured. Synthetic data is always labelled as such in the UI and API. No
+>   simulated price, balance, order or P&amp;L is ever presented as real.
+> - **OpenAI** research/analysis is optional (add a key on Connections). It only
+>   explains the deterministic engine's output — it never computes prices, levels,
+>   sizing or risk, and the platform works fully without it.
 > - The bundled Nifty 500 list is a **partial seed snapshot** of well-known
 >   constituents, clearly flagged. The full list is fetched at runtime from NSE
 >   (`/api/universe/nifty500/refresh`); on failure the last verified list is kept.
@@ -40,14 +46,17 @@ trading terminal — not a mockup.
 | Central account risk engine | ✅ engine + tests |
 | Nifty 500 universe manager (refresh, point-in-time membership, filters) | ✅ + tests |
 | Synthetic data adapter + adapter interface | ✅ |
+| Dhan live data adapter (DhanHQ v2 candles, scrip-master mapping, resampling) | ✅ |
+| In-app credential management (Dhan + OpenAI) with 24h token rotation & tests | ✅ + tests |
+| OpenAI research/analysis (optional, explains engine output) | ✅ |
 | Paper broker (idempotent orders, SL/TP, fills) | ✅ + tests |
-| Dhan / MT5 broker scaffolds (disabled without creds) | ✅ interface only |
+| Dhan broker (account/orders/positions, v2 REST) · MT5 scaffold | ✅ Dhan / scaffold MT5 |
 | Look-ahead-safe backtester (reuses live pipeline) | ✅ + tests |
 | Analytics (win rate, PF, expectancy, drawdown, breakdowns) | ✅ + tests |
 | FastAPI REST API (29 endpoints) + WebSocket | ✅ + integration tests |
 | Auth (PBKDF2 + HMAC tokens, role gating) | ✅ |
 | SQLAlchemy models + Alembic migrations | ✅ |
-| Next.js terminal — 13 pages wired to the API | ✅ builds clean |
+| Next.js terminal — 14 pages (black + neon-green theme) wired to the API | ✅ builds clean |
 | Docker + docker-compose (Postgres) | ✅ |
 
 **Tests: 62 passing** (`scripts/test.sh`). Frontend type-checks and builds cleanly.
@@ -79,6 +88,23 @@ cd infra
 docker compose up --build
 # frontend -> http://localhost:3005 , backend -> http://localhost:8005
 ```
+
+### Connecting Dhan &amp; OpenAI (real data + AI)
+
+Open **Connections** in the sidebar (sign in as admin first):
+
+- **Dhan** — enter your **Client ID** (fixed) and **Access Token**. Dhan tokens
+  expire ~every 24h, so paste a fresh token here daily; the page shows the token
+  age and time remaining. Click **Test connection** (hits Dhan's fund-limit
+  endpoint), then switch the **market-data feed** to *Dhan (live)*. Credentials
+  are stored server-side and never exposed to the browser.
+- **OpenAI** — paste an API key and model (default `gpt-4o-mini`) and **Test
+  connection**. Then use **✦ Analyze** on the Chart page for a natural-language
+  explanation of a setup.
+
+Everything is stored in the backend DB and survives restarts. These calls go
+directly from your backend to Dhan/OpenAI, so they work from your own machine
+(a locked-down sandbox may block the outbound hosts).
 
 ### Run the tests
 

@@ -197,6 +197,51 @@ def aggregate(
     return out
 
 
+def resample(candles: Sequence[Candle], target: Timeframe) -> List[Candle]:
+    """Resample candles into ``target`` by calendar-aligned time buckets.
+
+    Unlike :func:`aggregate` (fixed count), this groups by the natural time
+    boundary of the target timeframe, so gaps (weekends, closed sessions) don't
+    corrupt higher-timeframe bars. Used to derive 4H from 1H and weekly from
+    daily when a provider doesn't serve those directly.
+    """
+    buckets: "dict[object, List[Candle]]" = {}
+    order: List[object] = []
+    for c in candles:
+        key = _bucket_key(c.timestamp, target)
+        if key not in buckets:
+            buckets[key] = []
+            order.append(key)
+        buckets[key].append(c)
+    out: List[Candle] = []
+    for key in order:
+        grp = buckets[key]
+        out.append(
+            Candle(
+                timestamp=grp[0].timestamp,
+                open=grp[0].open,
+                high=max(c.high for c in grp),
+                low=min(c.low for c in grp),
+                close=grp[-1].close,
+                volume=sum(c.volume for c in grp),
+                timeframe=target,
+                closed=all(c.closed for c in grp),
+            )
+        )
+    return out
+
+
+def _bucket_key(ts: datetime, tf: Timeframe):
+    if tf == Timeframe.W1:
+        iso = ts.isocalendar()
+        return (iso[0], iso[1])
+    if tf == Timeframe.D1:
+        return (ts.year, ts.month, ts.day)
+    # Intraday: floor epoch minutes to the timeframe width.
+    epoch_min = int(ts.timestamp() // 60)
+    return epoch_min - (epoch_min % tf.minutes)
+
+
 def _merge_bucket(bucket: List[Candle], tf: Timeframe, closed: bool) -> Candle:
     return Candle(
         timestamp=bucket[0].timestamp,

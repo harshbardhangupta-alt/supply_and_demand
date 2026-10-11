@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api import auth, routes, ws
+from .api import auth, routes, routes_connections, ws
 from .db import init_db
 from .runtime import get_state
 from .settings import get_settings
@@ -26,6 +26,7 @@ async def lifespan(app: FastAPI):
              settings.environment, settings.live_trading_enabled)
     await init_db()
     state = get_state()
+    await _load_secrets(state)
     await _persist_universe(state)
     if settings.nifty500_refresh_on_start:
         state.universe.refresh()
@@ -35,6 +36,15 @@ async def lifespan(app: FastAPI):
              len(state.universe.state.active_symbols()), state.universe.state.source)
     yield
     log.info("Shutting down")
+
+
+async def _load_secrets(state) -> None:
+    from . import credentials as creds
+    from .db import SessionLocal
+    async with SessionLocal() as session:
+        state.apply_secrets(await creds.load_all(session))
+    log.info("Integrations: data provider=%s, dhan=%s, openai=%s",
+             state.data_provider_name(), bool(state.dhan_broker), bool(state.ai))
 
 
 async def _persist_universe(state) -> None:
@@ -66,6 +76,8 @@ def create_app() -> FastAPI:
     )
     app.include_router(auth.router)
     app.include_router(routes.router)
+    app.include_router(routes_connections.router)
+    app.include_router(routes_connections.ai_router)
     app.include_router(ws.router)
 
     @app.get("/")

@@ -11,9 +11,13 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
+from . import credentials as creds
+from .brokers.dhan import DhanBroker
 from .brokers.paper import PaperBroker
 from .core.candles import Timeframe
 from .core.config import StrategyConfig, forex_config, indian_equity_config
+from .data.dhan_data import DhanDataAdapter
+from .services.ai import OpenAIResearch
 from .core.instruments import (
     DEFAULT_SPECS,
     InstrumentSpec,
@@ -64,6 +68,33 @@ class AppState:
         self._scan_cache: Dict[str, dict] = {}
         self._lock = threading.Lock()
         self.started_at = datetime.now(timezone.utc)
+
+        # Credentials / integrations (populated from the DB on startup).
+        self.secrets: Dict[str, str] = {}
+        self.dhan_broker: Optional[DhanBroker] = None
+        self.ai: Optional[OpenAIResearch] = None
+
+    # --- integrations -----------------------------------------------------
+    def apply_secrets(self, secrets: Dict[str, str]) -> None:
+        """(Re)build the data adapter, Dhan broker and AI service from secrets."""
+        self.secrets = dict(secrets)
+        cid = secrets.get(creds.DHAN_CLIENT_ID) or ""
+        tok = secrets.get(creds.DHAN_ACCESS_TOKEN) or ""
+        provider = secrets.get(creds.DATA_PROVIDER) or self.settings.market_data_provider
+
+        self.dhan_broker = DhanBroker(cid, tok) if (cid and tok) else None
+
+        if provider == "dhan" and cid and tok:
+            self.adapter = DhanDataAdapter(cid, tok)
+        else:
+            self.adapter = SyntheticDataAdapter()
+
+        key = secrets.get(creds.OPENAI_API_KEY) or ""
+        model = secrets.get(creds.OPENAI_MODEL) or ""
+        self.ai = OpenAIResearch(key, model) if key else None
+
+    def data_provider_name(self) -> str:
+        return self.secrets.get(creds.DATA_PROVIDER) or self.settings.market_data_provider
 
     # --- universe/specs ---
     def specs_for(self, universe: str, limit: Optional[int] = None) -> List[InstrumentSpec]:

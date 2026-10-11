@@ -138,6 +138,19 @@ class BacktestRun(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
 
 
+class AppSecret(Base):
+    """Server-side secret/config store (Dhan + OpenAI credentials, flags).
+
+    Kept out of the frontend and out of ordinary logs; values are masked in API
+    responses. For production, back this with a real secret manager.
+    """
+
+    __tablename__ = "app_secrets"
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[str] = mapped_column(Text, default="")
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
+
+
 class AuditEvent(Base):
     __tablename__ = "audit_events"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)

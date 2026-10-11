@@ -17,10 +17,29 @@ function ChartInner() {
   const [setup, setSetup] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [ai, setAi] = useState<string | null>(null);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiErr, setAiErr] = useState<string | null>(null);
+
+  async function runAI() {
+    setAiBusy(true);
+    setAiErr(null);
+    setAi(null);
+    try {
+      const r = await api.post<{ analysis: string }>("/api/ai/analyze", { symbol });
+      setAi(r.analysis);
+    } catch (e) {
+      setAiErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setAiBusy(false);
+    }
+  }
 
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setAi(null);
+    setAiErr(null);
     Promise.all([
       api.get<ChartData>(`/api/chart/${symbol}?timeframe=${tf}&count=240`),
       api
@@ -123,6 +142,27 @@ function ChartInner() {
                 still drawn on the chart.
               </p>
             )}
+
+            <div className="mt-4 border-t border-border pt-3">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold uppercase tracking-wide text-muted">
+                  AI Research
+                </span>
+                <button className="btn btn-accent !py-1 !text-xs" onClick={runAI} disabled={aiBusy}>
+                  {aiBusy ? "Analyzing…" : "✦ Analyze"}
+                </button>
+              </div>
+              {aiErr && <p className="text-xs text-bear">{aiErr}</p>}
+              {ai ? (
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-txt/90">{ai}</p>
+              ) : (
+                !aiErr && (
+                  <p className="text-xs text-muted">
+                    Uses OpenAI to explain this setup. Add a key on the Connections page.
+                  </p>
+                )
+              )}
+            </div>
           </div>
         </div>
       ) : null}

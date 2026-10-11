@@ -6,16 +6,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "#0a0e14",
-        panel: "#111722",
-        panel2: "#0d131c",
-        border: "#1e2735",
-        muted: "#8a97a8",
-        txt: "#e6edf3",
-        accent: "#4f8cff",
-        bull: "#26a69a",
-        bear: "#ef5350",
-        warn: "#f0b429",
+        bg: "#05070a",        // near-black
+        panel: "#0b1016",
+        panel2: "#070b0f",
+        border: "#17211c",    // dark green-tinted border
+        muted: "#79887f",
+        txt: "#e9f2ec",
+        accent: "#2bff88",    // neon green
+        neon: "#2bff88",
+        bull: "#2bff88",
+        bear: "#ff4d5e",
+        warn: "#ffd166",
+      },
+      boxShadow: {
+        neon: "0 0 0 1px rgba(43,255,136,0.25), 0 0 18px rgba(43,255,136,0.12)",
       },
       fontFamily: {
         sans: ["ui-sans-serif", "system-ui", "Inter", "Segoe UI", "sans-serif"],

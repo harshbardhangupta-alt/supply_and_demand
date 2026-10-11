@@ -14,21 +14,30 @@ limit fills on genuine touch, SL/TP protective exits, idempotent client order
 ids, realized/unrealized P&amp;L, closed-trade history for analytics. All output is
 labelled PAPER; nothing is presented as real.
 
-## Dhan (Indian markets) — scaffold
+## Dhan (Indian markets) — implemented
 
-`brokers/dhan.py`. Covers eligible NSE/BSE cash, F&amp;O, currency and MCX
-commodity instruments via security-id mapping. **Disabled** until
-`SMC_DHAN_CLIENT_ID` and `SMC_DHAN_ACCESS_TOKEN` are set; without them every call
-raises `BrokerError` rather than faking a session.
+`brokers/dhan.py` (execution/account) + `data/dhan_data.py` (market data).
+Covers eligible NSE instruments via security-id mapping from the public scrip
+master. **Disabled** until credentials are set; without them every call raises
+`BrokerError` rather than faking a session.
 
-To enable (in a configured deployment):
-1. Create a Dhan account and generate an access token.
-2. Set `SMC_DHAN_CLIENT_ID` / `SMC_DHAN_ACCESS_TOKEN` in the backend `.env`.
-3. Load the Dhan instrument master and populate the security-id map.
-4. Implement the REST calls in the marked methods against current docs
-   (<https://dhanhq.co/docs/v2/>): auth validation, market data, historical
-   candles, order submit/modify/cancel/status, positions. Respect rate limits
-   and token expiry.
+**Add credentials in the app — no code or env edits needed:**
+1. Create a Dhan account and generate an access token (dhanhq.co).
+2. Open the **Connections** page in the UI → enter Client ID (fixed) + Access
+   Token → **Test connection** (calls `GET /v2/fundlimit`).
+3. Switch the market-data feed to *Dhan (live)*.
+4. Because Dhan access tokens expire ~every 24h, paste a fresh token daily; the
+   page shows the token's age and remaining validity and warns when expired.
+
+Implemented v2 calls: `/v2/charts/historical` (daily), `/v2/charts/intraday`
+(1/5/15/60-min), `/v2/fundlimit`, `/v2/orders`, `/v2/positions`. 4H and weekly
+are derived by calendar resampling. **Verify request/response shapes against the
+current DhanHQ v2 docs before live order placement** — the data path is the
+primary, tested use; live order placement should be validated with small sizes.
+
+Credentials can also be provided via env fallback (`SMC_DHAN_CLIENT_ID` /
+`SMC_DHAN_ACCESS_TOKEN`) but the Connections page is preferred (DB-stored,
+token-rotation aware).
 
 Dhan does **not** support international Forex, Gold CFDs or international
 commodities — those route to an MT5-type broker. Unsupported instruments are
