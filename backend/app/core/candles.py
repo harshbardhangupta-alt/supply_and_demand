@@ -153,6 +153,27 @@ def atr(candles: Sequence[Candle], period: int = 14) -> Optional[float]:
     return atr_val
 
 
+def atr_series(candles: Sequence[Candle], period: int = 14) -> List[Optional[float]]:
+    """Rolling Wilder ATR aligned to each index (None until enough data).
+
+    Computed once in O(n) so callers that need ATR at many points don't recompute
+    it per bar (which would be O(n^2)).
+    """
+    n = len(candles)
+    out: List[Optional[float]] = [None] * n
+    if n < period + 1:
+        return out
+    trs = [0.0] * n
+    for i in range(1, n):
+        trs[i] = true_range(candles[i - 1].close, candles[i])
+    atr_val = sum(trs[1 : period + 1]) / period
+    out[period] = atr_val
+    for i in range(period + 1, n):
+        atr_val = (atr_val * (period - 1) + trs[i]) / period
+        out[i] = atr_val
+    return out
+
+
 def validate_series(candles: Sequence[Candle]) -> List[str]:
     """Return a list of data-integrity problems (empty == clean)."""
     problems: List[str] = []

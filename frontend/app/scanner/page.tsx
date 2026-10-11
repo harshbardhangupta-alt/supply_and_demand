@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { usePoll } from "@/lib/hooks";
 import { num } from "@/lib/format";
 import { Bias, ErrorBox, Loading, PageHeader, Pill, Score } from "@/components/ui";
+import WhyButton, { Why } from "@/components/WhyButton";
 
 type Row = {
   symbol: string;
@@ -28,6 +29,7 @@ type Row = {
   risk_pct: number | null;
   eligible: boolean;
   rejection_reason: string | null;
+  why?: Why;
 };
 
 type ScanResult = {
@@ -123,7 +125,7 @@ export default function ScannerPage() {
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr>
-                {["Symbol", "Price", "Weekly", "Daily", "4H", "1H", "Dir", "BOS", "FVG", "Zone", "Score", "Entry", "Stop", "Target", "R:R", "Qty", "Risk%", "Status"].map(
+                {["Symbol", "Price", "Weekly", "Daily", "4H", "1H", "Dir", "BOS", "FVG", "Zone", "Score", "Entry", "Stop", "Target", "R:R", "Qty", "Risk%", "Status", "Why"].map(
                   (h) => (
                     <th key={h} className="th">
                       {h}
@@ -175,6 +177,7 @@ export default function ScannerPage() {
                       </span>
                     )}
                   </td>
+                  <td className="td"><WhyButton why={r.why} symbol={r.symbol} /></td>
                 </tr>
               ))}
             </tbody>

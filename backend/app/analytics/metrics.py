@@ -23,6 +23,8 @@ class ClosedTrade:
     exit_reason: str = ""
     mae: float = 0.0
     mfe: float = 0.0
+    stop: float = 0.0
+    target: float = 0.0
 
 
 @dataclass

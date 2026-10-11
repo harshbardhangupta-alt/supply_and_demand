@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Optional, Sequence
 
-from .candles import Candle, atr
+from .candles import Candle, atr_series
 from .config import DisplacementConfig
 
 
@@ -34,13 +34,14 @@ def detect_displacements(
     if n < cfg.atr_period + 2:
         return out
 
+    atrs = atr_series(candles, cfg.atr_period)  # precomputed once, O(n)
     i = cfg.atr_period
     while i < n:
         c = candles[i]
         if not c.closed:
             i += 1
             continue
-        a = atr(candles[: i + 1], cfg.atr_period)
+        a = atrs[i]
         if not a or a <= 0:
             i += 1
             continue

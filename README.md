@@ -56,7 +56,8 @@ trading terminal — not a mockup.
 | FastAPI REST API (29 endpoints) + WebSocket | ✅ + integration tests |
 | Auth (PBKDF2 + HMAC tokens, role gating) | ✅ |
 | SQLAlchemy models + Alembic migrations | ✅ |
-| Next.js terminal — 14 pages (black + neon-green theme) wired to the API | ✅ builds clean |
+| Signals dashboard (slim-rail UI): selected stocks, entry/SL/target, target-vs-SL outcomes, accuracy, per-stock **Why?** popup | ✅ |
+| Next.js terminal — black + neon-green theme, sparkline cards | ✅ builds clean |
 | Docker + docker-compose (Postgres) | ✅ |
 
 **Tests: 62 passing** (`scripts/test.sh`). Frontend type-checks and builds cleanly.

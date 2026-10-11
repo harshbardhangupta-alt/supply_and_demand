@@ -67,8 +67,56 @@ def setup_to_row(spec: InstrumentSpec, res: SetupResult, provider: str,
         "order_type": res.order_type,
         "eligible": res.tradable,
         "rejection_reason": res.rejection_reason,
+        "risk_checks": res.risk_checks,
         "zone": _zone_dict(res),
+        "why": _why(spec, res),
     }
+
+
+def _why(spec: InstrumentSpec, res: SetupResult) -> dict:
+    """Human-readable explanation of why a stock was selected or rejected."""
+    factors: List[dict] = []
+    b = res.biases or {}
+
+    def add(label, detail, positive):
+        factors.append({"label": label, "detail": detail, "positive": positive})
+
+    # Higher-timeframe bias.
+    for tf, key in (("Weekly", "1w"), ("Daily", "1d"), ("4H", "4h"), ("1H", "1h")):
+        v = b.get(key)
+        if v:
+            good = (res.direction == "long" and v in ("bullish", "transitional")) or (
+                res.direction == "short" and v in ("bearish", "transitional"))
+            add(f"{tf} bias", v, bool(good))
+
+    if res.bos and res.bos != "none":
+        add("Market structure", res.bos, True)
+    if res.fvg == "present":
+        add("Fair Value Gap", "imbalance present near zone", True)
+    if res.zone:
+        z = res.zone
+        add("Demand/Supply zone", f"{z.direction.value} zone {z.state.value}"
+            + (" · fresh" if z.is_fresh else f" · {z.touches} touch(es)"),
+            z.is_fresh)
+    if res.reward_risk is not None:
+        add("Reward:Risk", f"{res.reward_risk}:1", res.reward_risk >= 3)
+
+    # Score components.
+    if res.score_breakdown:
+        for k, v in (res.score_breakdown.get("components") or {}).items():
+            add(f"Score · {k}", f"{v} pts", v > 0)
+
+    # Risk checks.
+    for name, passed in (res.risk_checks or {}).items():
+        if not passed:
+            add(f"Risk check · {name}", "failed", False)
+
+    if res.tradable:
+        summary = (f"Selected: {res.direction} setup scoring {res.score}/100 with "
+                   f"{res.reward_risk}:1 reward-to-risk and all risk checks passed.")
+    else:
+        summary = f"Rejected: {res.rejection_reason or 'did not meet strategy criteria'}."
+    return {"selected": res.tradable, "summary": summary, "factors": factors}
 
 
 def _zone_dict(res: SetupResult) -> Optional[dict]:

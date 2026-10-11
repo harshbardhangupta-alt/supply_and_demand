@@ -182,6 +182,8 @@ def _to_closed_trade(trade, exit_price, pnl, reason, exit_bar) -> ClosedTrade:
         exit=exit_price,
         qty=setup.qty,
         pnl=pnl,
+        stop=setup.stop or 0.0,
+        target=setup.target or 0.0,
         reward_risk_planned=setup.reward_risk or 0.0,
         entry_model=setup.entry_model or "",
         score=setup.score,
