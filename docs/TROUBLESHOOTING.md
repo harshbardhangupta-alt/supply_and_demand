@@ -1,5 +1,17 @@
 # Troubleshooting
 
+### `ModuleNotFoundError` on startup (python-multipart, aiosqlite, …) / Python 3.14
+Install the full runtime set in one go (no venv required):
+
+```
+pip install fastapi "uvicorn[standard]" pydantic pydantic-settings sqlalchemy greenlet aiosqlite python-multipart python-dotenv
+```
+
+The app is pure-Python on SQLite — it does **not** need pandas, numpy, asyncpg or
+psycopg (those are only for the optional Docker/Postgres path and may fail to
+build on brand-new Python releases). `requirements.txt` lists only what's needed;
+the Postgres drivers are commented out.
+
 ### Backend won't import / `greenlet` error
 SQLAlchemy async needs `greenlet`. `pip install -r backend/requirements.txt`
 installs it. Ensure the virtualenv is active.

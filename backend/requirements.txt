@@ -1,24 +1,33 @@
-# Backend runtime + test dependencies (pinned to tested versions).
-fastapi==0.143.0
-uvicorn[standard]==0.54.0
-starlette==1.7.0
-pydantic==2.14.0
-pydantic-settings==2.15.0
-SQLAlchemy==2.1.4
-greenlet==3.5.6
-aiosqlite==0.22.1
-alembic==1.20.0
-# PostgreSQL drivers (used by the Docker Compose deployment; SQLite needs neither)
-asyncpg==0.30.0
-psycopg[binary]==3.2.3
-pandas==3.0.6
-numpy==2.5.4
-httpx==0.28.1
-python-multipart==0.0.32
-python-dotenv==1.2.4
-# Tests
-pytest==9.1.1
-pytest-asyncio==1.4.0
-# Optional live brokers (install where supported):
+# Backend runtime + test dependencies.
+# Versions are left unpinned so pip resolves wheels compatible with your Python
+# (including 3.12/3.13/3.14). If you want reproducible installs, pin them.
+
+# --- Core runtime (required, SQLite) ---
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+SQLAlchemy
+greenlet
+aiosqlite
+python-multipart
+python-dotenv
+
+# --- Tests ---
+pytest
+pytest-asyncio
+httpx
+
+# --- Migrations (optional; only needed if you run Alembic) ---
+# alembic
+
+# --- PostgreSQL drivers (optional; ONLY for the Docker/Postgres deployment,
+#     NOT needed for local SQLite). Install manually if you use Postgres. ---
+# asyncpg
+# psycopg[binary]
+
+# --- Optional live brokers (install where supported) ---
 #   MetaTrader5   (Windows / bridge only)
 #   dhanhq        (Dhan official SDK)
+#
+# Note: pandas / numpy are NOT required — the strategy engine is pure Python.
