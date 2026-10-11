@@ -46,6 +46,8 @@ class DhanDataAdapter(MarketDataAdapter):
         self._sec_map: Dict[str, Tuple[str, str, str]] = {}  # symbol -> (secid, segment, instrument)
         self._last_update: Optional[datetime] = None
         self._connected = False
+        self._cache: Dict[str, Tuple[datetime, list]] = {}  # (symbol,tf,count) -> (ts, candles)
+        self._cache_ttl = 60.0  # seconds
 
     # --- credentials / headers --------------------------------------------
     def _headers(self) -> dict:
@@ -85,6 +87,10 @@ class DhanDataAdapter(MarketDataAdapter):
     # --- candle fetch ------------------------------------------------------
     def get_candles(self, symbol: str, timeframe: Timeframe, count: int,
                     end: Optional[datetime] = None) -> List[Candle]:
+        ck = f"{symbol}:{timeframe.value}:{count}"
+        hit = self._cache.get(ck)
+        if hit and (datetime.now(timezone.utc) - hit[0]).total_seconds() < self._cache_ttl:
+            return hit[1]
         resolved = self._resolve(symbol)
         if not resolved:
             log.warning("Dhan: no security id for %s", symbol)
@@ -105,7 +111,9 @@ class DhanDataAdapter(MarketDataAdapter):
                 return []
             self._connected = True
             self._last_update = datetime.now(timezone.utc)
-            return candles[-count:]
+            result = candles[-count:]
+            self._cache[ck] = (datetime.now(timezone.utc), result)
+            return result
         except Exception as exc:
             self._connected = False
             log.warning("Dhan candle fetch failed for %s %s: %s", symbol, timeframe.value, exc)

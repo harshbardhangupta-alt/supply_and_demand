@@ -13,7 +13,7 @@ export default function BacktestPage() {
   const [res, setRes] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const authed = typeof window !== "undefined" && !!getToken();
+  const authed = true;
 
   async function run() {
     setErr(null);

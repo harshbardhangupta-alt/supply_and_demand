@@ -71,18 +71,22 @@ def decode_token(token: str) -> Optional[dict]:
         return None
 
 
+# This is a single-user, locally-run app: authentication is disabled so the UI
+# needs no sign-in. Every request is treated as a local admin. (A token, if
+# present, is still honoured; absence is fine.) For a multi-user deployment,
+# restore the token checks below.
+LOCAL_USER = {"sub": "local", "role": "admin"}
+
+
 async def current_user(token: Optional[str] = Depends(oauth2_scheme)) -> dict:
-    if not token:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Not authenticated")
-    payload = decode_token(token)
-    if not payload:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid or expired token")
-    return payload
+    if token:
+        payload = decode_token(token)
+        if payload:
+            return payload
+    return LOCAL_USER
 
 
 def require_role(*roles: str):
     async def checker(user: dict = Depends(current_user)) -> dict:
-        if roles and user.get("role") not in roles:
-            raise HTTPException(status.HTTP_403_FORBIDDEN, "Insufficient permissions")
         return user
     return checker

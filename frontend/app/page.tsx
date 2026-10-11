@@ -19,7 +19,7 @@ type Hist = {
 };
 type Rej = { symbol: string; name: string; score: number; rejection_reason: string; why: Why };
 type Board = {
-  provider: string; feed_mode: string;
+  provider: string; feed_mode: string; data_connected?: boolean;
   summary: { scanned: number; selected: number; rejected: number; resolved: number;
     wins: number; losses: number; accuracy: number | null; avg_reward_risk: number | null };
   selected: Selected[]; rejected: Rej[]; history: Hist[];
@@ -86,6 +86,13 @@ export default function Dashboard() {
       </div>
 
       {error && <div className="panel border-bear/40 bg-bear/5 p-3 text-sm text-bear">{error}</div>}
+
+      {data && !data.data_connected && (
+        <div className="panel flex flex-wrap items-center gap-2 border-warn/40 bg-warn/5 p-3 text-sm text-warn">
+          <span>⚠ Dhan is not connected — no live data. Add your Client ID &amp; Access Token to load stocks.</span>
+          <a href="/connections" className="ml-auto rounded-md border border-warn/50 px-2 py-1 text-xs hover:bg-warn/10">Connect Dhan →</a>
+        </div>
+      )}
 
       {/* stat cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

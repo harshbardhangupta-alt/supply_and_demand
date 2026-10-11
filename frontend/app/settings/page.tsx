@@ -15,7 +15,7 @@ export default function SettingsPage() {
   const [direction, setDirection] = useState("long");
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const authed = typeof window !== "undefined" && !!getToken();
+  const authed = true;
 
   useEffect(() => {
     const cfg = data?.configs?.[universe];

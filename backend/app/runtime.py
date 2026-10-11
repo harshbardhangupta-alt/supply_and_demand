@@ -24,7 +24,7 @@ from .core.instruments import (
     MarketUniverse,
     equity_spec,
 )
-from .data.synthetic import SyntheticDataAdapter
+from .data.null import NullDataAdapter
 from .paper.engine import PaperEngine
 from .services.scanner import scan_universe
 from .settings import get_settings
@@ -49,7 +49,7 @@ class EngineControl:
 class AppState:
     def __init__(self) -> None:
         self.settings = get_settings()
-        self.adapter = SyntheticDataAdapter()
+        self.adapter = NullDataAdapter()
         self.universe = Nifty500Universe()
         self.configs: Dict[str, StrategyConfig] = {
             MarketUniverse.NIFTY500.value: indian_equity_config(),
@@ -87,7 +87,7 @@ class AppState:
         if provider == "dhan" and cid and tok:
             self.adapter = DhanDataAdapter(cid, tok)
         else:
-            self.adapter = SyntheticDataAdapter()
+            self.adapter = NullDataAdapter()
 
         key = secrets.get(creds.OPENAI_API_KEY) or ""
         model = secrets.get(creds.OPENAI_MODEL) or ""
@@ -95,6 +95,9 @@ class AppState:
 
     def data_provider_name(self) -> str:
         return self.secrets.get(creds.DATA_PROVIDER) or self.settings.market_data_provider
+
+    def data_connected(self) -> bool:
+        return isinstance(self.adapter, DhanDataAdapter)
 
     # --- universe/specs ---
     def specs_for(self, universe: str, limit: Optional[int] = None) -> List[InstrumentSpec]:
@@ -123,6 +126,7 @@ class AppState:
             "universe": universe,
             "provider": self.adapter.provider,
             "feed_mode": status.mode.value,
+            "data_connected": self.data_connected(),
             "last_update": status.last_update.isoformat() if status.last_update else None,
             "coverage_pct": status.coverage_pct,
             "total": len(rows),
@@ -176,6 +180,7 @@ class AppState:
             "universe_size": len(self.universe.state.active_symbols()),
             "data_provider": self.adapter.provider,
             "data_feed_mode": self.adapter.status().mode.value,
+            "data_connected": self.data_connected(),
         }
 
 

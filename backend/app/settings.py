@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     default_equity: float = 1_000_000.0
 
     # Data.
-    market_data_provider: str = "synthetic"     # synthetic | dhan | mt5
+    market_data_provider: str = "dhan"          # dhan only (no synthetic in the app) | mt5
     data_max_age_seconds: float = 120.0
 
     # Universe.

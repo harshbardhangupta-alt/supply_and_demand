@@ -22,7 +22,7 @@ type Conn = {
 };
 
 export default function ConnectionsPage() {
-  const authed = typeof window !== "undefined" && !!getToken();
+  const authed = true;
   const { data, refresh } = usePoll<Conn>(() => api.get("/api/connections"), 0);
 
   return (
@@ -30,13 +30,8 @@ export default function ConnectionsPage() {
       <PageHeader
         title="Connections"
         desc="Add your Dhan and OpenAI credentials. Stored server-side (never exposed to the browser) and masked here."
-        right={data && <Pill tone={data.data_provider === "dhan" ? "bull" : "warn"}>feed: {data.data_provider}</Pill>}
+        right={data && <Pill tone={data.dhan?.configured ? "bull" : "warn"}>{data.dhan?.configured ? "Dhan connected" : "Dhan not set"}</Pill>}
       />
-      {!authed && (
-        <div className="panel mb-4 border-warn/40 bg-warn/5 p-3 text-sm text-warn">
-          Sign in as admin (top-right) to add or change credentials.
-        </div>
-      )}
       <div className="grid gap-4 lg:grid-cols-2">
         <DhanCard data={data} onChange={refresh} />
         <OpenAICard data={data} onChange={refresh} />
@@ -76,18 +71,6 @@ function DhanCard({ data, onChange }: { data: Conn | null; onChange: () => void 
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     }
-  }
-
-  async function useDhanFeed() {
-    setErr(null);
-    try {
-      await api.put("/api/connections/provider", { provider: "dhan" });
-      onChange();
-    } catch (e) { setErr(e instanceof Error ? e.message : String(e)); }
-  }
-  async function useSynthetic() {
-    await api.put("/api/connections/provider", { provider: "synthetic" });
-    onChange();
   }
 
   const age = d?.token_age_hours;
@@ -141,12 +124,11 @@ function DhanCard({ data, onChange }: { data: Conn | null; onChange: () => void 
         </div>
       </div>
 
-      <div className="mt-4 flex items-center gap-2 border-t border-border pt-3">
-        <span className="text-xs text-muted">Market data feed:</span>
-        <button className={`btn ${data?.data_provider === "dhan" ? "btn-accent" : ""}`}
-                onClick={useDhanFeed} disabled={!d?.configured}>Dhan (live)</button>
-        <button className={`btn ${data?.data_provider === "synthetic" ? "btn-accent" : ""}`}
-                onClick={useSynthetic}>Synthetic</button>
+      <div className="mt-4 flex items-center gap-2 border-t border-border pt-3 text-xs">
+        <span className="text-muted">Market data:</span>
+        <span className={d?.configured ? "text-bull" : "text-warn"}>
+          {d?.configured ? "Dhan live feed active" : "Dhan is the only data source — add credentials above to load data"}
+        </span>
       </div>
 
       {test && (

@@ -5,7 +5,7 @@ import { usePoll } from "@/lib/hooks";
 import { ErrorBox, Loading, PageHeader } from "@/components/ui";
 
 export default function AuditPage() {
-  const authed = typeof window !== "undefined" && !!getToken();
+  const authed = true;
   const { data, error, loading } = usePoll<any>(() => api.get("/api/audit"), 5000, [authed]);
   const events = data?.events ?? [];
   return (

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { api, getToken, setToken } from "@/lib/api";
+import { api } from "@/lib/api";
 
 const GROUPS: { title: string; items: { href: string; label: string; icon: () => JSX.Element }[] }[] = [
   {
@@ -35,11 +35,9 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: () =>
 
 export default function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [authed, setAuthed] = useState(false);
   const [open, setOpen] = useState(false);
   const [ov, setOv] = useState<any>(null);
   useEffect(() => {
-    setAuthed(!!getToken());
     setOpen(false);
   }, [pathname]);
   useEffect(() => {
@@ -103,21 +101,22 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           <div className="rounded-lg border border-border bg-panel2 p-3">
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted">Data Feed</span>
-              <span className={ov?.data_feed_mode === "synthetic" ? "text-warn" : "text-accent"}>
-                {ov?.data_provider ?? "…"}
+              <span className={ov?.data_connected ? "text-bull" : "text-warn"}>
+                {ov?.data_connected ? "Dhan · live" : "not connected"}
               </span>
             </div>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-border">
-              <div className="h-full bg-accent" style={{ width: ov ? "100%" : "20%" }} />
+              <div
+                className={`h-full ${ov?.data_connected ? "bg-bull" : "bg-warn"}`}
+                style={{ width: ov?.data_connected ? "100%" : "35%" }}
+              />
             </div>
+            {!ov?.data_connected && (
+              <Link href="/connections" className="mt-2 block text-[11px] text-accent hover:underline">
+                Connect Dhan →
+              </Link>
+            )}
           </div>
-          {authed ? (
-            <button className="btn w-full" onClick={() => { setToken(null); setAuthed(false); location.reload(); }}>
-              Sign out
-            </button>
-          ) : (
-            <Link href="/login" className="btn btn-accent w-full justify-center">Sign in</Link>
-          )}
         </div>
       </aside>
 

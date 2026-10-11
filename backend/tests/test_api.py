@@ -8,6 +8,12 @@ from app.main import app
 @pytest.fixture(scope="module")
 def client():
     with TestClient(app) as c:
+        # The app defaults to the Dhan (null) feed; inject the synthetic
+        # generator so data-dependent endpoints have candles to work with
+        # in tests (no live credentials needed).
+        from app.runtime import get_state
+        from app.data.synthetic import SyntheticDataAdapter
+        get_state().adapter = SyntheticDataAdapter()
         yield c
 
 
@@ -51,9 +57,10 @@ def test_chart_overlays(client):
     assert "zones" in c and "swings" in c and "fvgs" in c
 
 
-def test_backtest_requires_auth(client):
+def test_backtest_open_without_auth(client):
+    # Auth is disabled (single-user local app), so this works without a token.
     r = client.post("/api/backtest", json={"symbol": "RELIANCE", "bars": 200})
-    assert r.status_code == 401
+    assert r.status_code == 200
 
 
 def test_backtest_runs(client, auth):

@@ -37,6 +37,7 @@ type ScanResult = {
   eligible: number;
   provider: string;
   feed_mode: string;
+  data_connected?: boolean;
   last_update: string | null;
   rows: Row[];
 };
@@ -117,6 +118,12 @@ export default function ScannerPage() {
         )}
       </div>
 
+      {data && !data.data_connected && (
+        <div className="panel mb-3 flex flex-wrap items-center gap-2 border-warn/40 bg-warn/5 p-3 text-sm text-warn">
+          <span>⚠ Dhan is not connected — no live data to scan.</span>
+          <a href="/connections" className="ml-auto rounded-md border border-warn/50 px-2 py-1 text-xs hover:bg-warn/10">Connect Dhan →</a>
+        </div>
+      )}
       {error && <ErrorBox error={error} />}
       {loading && !data ? (
         <Loading label="Scanning universe…" />

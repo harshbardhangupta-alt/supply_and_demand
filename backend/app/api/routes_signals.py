@@ -80,6 +80,7 @@ async def signals_board(
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "provider": st.adapter.provider,
         "feed_mode": st.adapter.status().mode.value,
+        "data_connected": st.data_connected(),
         "summary": {
             "scanned": len(rows),
             "selected": len(selected),

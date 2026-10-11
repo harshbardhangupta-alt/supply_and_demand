@@ -11,7 +11,7 @@ export default function TradingPage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [universe, setUniverse] = useState("nifty500");
-  const authed = typeof window !== "undefined" && !!getToken();
+  const authed = true;
 
   async function act(fn: () => Promise<any>, label: string) {
     setErr(null);
