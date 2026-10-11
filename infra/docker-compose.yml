@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: smc
+      POSTGRES_PASSWORD: smc
+      POSTGRES_DB: smc
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smc"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../backend
+    environment:
+      SMC_DATABASE_URL: postgresql+asyncpg://smc:smc@db:5432/smc
+      SMC_SYNC_DATABASE_URL: postgresql+psycopg://smc:smc@db:5432/smc
+      SMC_LIVE_TRADING_ENABLED: "false"
+      SMC_CORS_ORIGINS: '["http://localhost:3000"]'
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ../frontend
+    environment:
+      NEXT_PUBLIC_API_BASE: http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

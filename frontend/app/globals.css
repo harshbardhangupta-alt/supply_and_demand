@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: #0a0e14;
+  color: #e6edf3;
+}
+
+body {
+  font-feature-settings: "tnum" 1;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2735;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@layer components {
+  .panel {
+    @apply bg-panel border border-border rounded-lg;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-border bg-panel2 px-3 py-1.5 text-sm text-txt transition hover:border-accent hover:text-accent disabled:opacity-40 disabled:hover:border-border disabled:hover:text-txt;
+  }
+  .btn-accent {
+    @apply border-accent bg-accent/10 text-accent;
+  }
+  .btn-danger {
+    @apply border-bear/60 bg-bear/10 text-bear hover:border-bear hover:text-bear;
+  }
+  .input {
+    @apply rounded-md border border-border bg-panel2 px-2.5 py-1.5 text-sm text-txt outline-none focus:border-accent;
+  }
+  .tag {
+    @apply inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium;
+  }
+  .th {
+    @apply sticky top-0 z-10 bg-panel2 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-muted;
+  }
+  .td {
+    @apply whitespace-nowrap px-3 py-2 text-sm;
+  }
+}

@@ -8,6 +8,9 @@ SQLAlchemy==2.1.4
 greenlet==3.5.6
 aiosqlite==0.22.1
 alembic==1.20.0
+# PostgreSQL drivers (used by the Docker Compose deployment; SQLite needs neither)
+asyncpg==0.30.0
+psycopg[binary]==3.2.3
 pandas==3.0.6
 numpy==2.5.4
 httpx==0.28.1

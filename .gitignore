@@ -29,3 +29,6 @@ npm-debug.log*
 # Editor
 .vscode/
 .idea/
+
+# TS build info
+frontend/tsconfig.tsbuildinfo
