@@ -12,11 +12,11 @@ greenlet
 aiosqlite
 python-multipart
 python-dotenv
+httpx                 # Dhan + OpenAI API calls (and the TestClient)
 
 # --- Tests ---
 pytest
 pytest-asyncio
-httpx
 
 # --- Migrations (optional; only needed if you run Alembic) ---
 # alembic

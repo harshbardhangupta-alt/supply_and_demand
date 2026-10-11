@@ -4,8 +4,11 @@
 Install the full runtime set in one go (no venv required):
 
 ```
-pip install fastapi "uvicorn[standard]" pydantic pydantic-settings sqlalchemy greenlet aiosqlite python-multipart python-dotenv
+pip install fastapi "uvicorn[standard]" pydantic pydantic-settings sqlalchemy greenlet aiosqlite python-multipart python-dotenv httpx
 ```
+
+(`httpx` is required — the Dhan and OpenAI integrations use it. A missing
+`httpx` shows up as `ModuleNotFoundError: No module named 'httpx'` on startup.)
 
 The app is pure-Python on SQLite — it does **not** need pandas, numpy, asyncpg or
 psycopg (those are only for the optional Docker/Postgres path and may fail to
