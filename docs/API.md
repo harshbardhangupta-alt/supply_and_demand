@@ -1,6 +1,6 @@
 # API reference
 
-Base URL `http://localhost:8000`. Interactive docs at `/docs` (Swagger) and
+Base URL `http://localhost:8005`. Interactive docs at `/docs` (Swagger) and
 `/redoc`. Auth is a bearer token from `/api/auth/login`; endpoints that change
 state or expose the audit trail require it (admin role for universe refresh,
 config changes, liquidation, live enable).

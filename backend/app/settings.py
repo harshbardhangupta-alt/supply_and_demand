@@ -34,7 +34,9 @@ class Settings(BaseSettings):
     admin_username: str = "admin"
     admin_password: str = "admin"               # change via env in real use
 
-    cors_origins: List[str] = Field(default_factory=lambda: ["http://localhost:3000"])
+    cors_origins: List[str] = Field(
+        default_factory=lambda: ["http://localhost:3005", "http://localhost:3000"]
+    )
 
     # Broker (never commit real values; use env).
     dhan_client_id: str = ""

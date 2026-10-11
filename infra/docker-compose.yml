@@ -22,9 +22,9 @@ services:
       SMC_DATABASE_URL: postgresql+asyncpg://smc:smc@db:5432/smc
       SMC_SYNC_DATABASE_URL: postgresql+psycopg://smc:smc@db:5432/smc
       SMC_LIVE_TRADING_ENABLED: "false"
-      SMC_CORS_ORIGINS: '["http://localhost:3000"]'
+      SMC_CORS_ORIGINS: '["http://localhost:3005"]'
     ports:
-      - "8000:8000"
+      - "8005:8005"
     depends_on:
       db:
         condition: service_healthy
@@ -33,9 +33,9 @@ services:
     build:
       context: ../frontend
     environment:
-      NEXT_PUBLIC_API_BASE: http://backend:8000
+      NEXT_PUBLIC_API_BASE: http://backend:8005
     ports:
-      - "3000:3000"
+      - "3005:3005"
     depends_on:
       - backend
 

@@ -27,7 +27,7 @@ The bundled seed is a partial snapshot until a successful refresh.
 
 ### Frontend can't reach the backend
 The frontend proxies `/api` and `/ws` to `NEXT_PUBLIC_API_BASE`
-(default `http://localhost:8000`). Set it in `frontend/.env.local`. Check CORS
+(default `http://localhost:8005`). Set it in `frontend/.env.local`. Check CORS
 origins (`SMC_CORS_ORIGINS`) if calling cross-origin.
 
 ### Live trading returns 403

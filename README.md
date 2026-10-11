@@ -62,14 +62,14 @@ See [docs/LIMITATIONS.md](docs/LIMITATIONS.md) for what is intentionally scaffol
 # 1. Setup (creates .venv, installs backend + frontend deps, copies .env files)
 ./scripts/setup.sh
 
-# 2. Start the backend (http://localhost:8000, docs at /docs)
+# 2. Start the backend (http://localhost:8005, docs at /docs)
 ./scripts/dev_backend.sh
 
-# 3. In another terminal, start the frontend (http://localhost:3000)
+# 3. In another terminal, start the frontend (http://localhost:3005)
 ./scripts/dev_frontend.sh
 ```
 
-Then open <http://localhost:3000>. Sign in with `admin` / `admin` (change via
+Then open <http://localhost:3005>. Sign in with `admin` / `admin` (change via
 `SMC_ADMIN_USERNAME` / `SMC_ADMIN_PASSWORD`).
 
 ### With Docker (Postgres)
@@ -77,7 +77,7 @@ Then open <http://localhost:3000>. Sign in with `admin` / `admin` (change via
 ```bash
 cd infra
 docker compose up --build
-# frontend -> http://localhost:3000 , backend -> http://localhost:8000
+# frontend -> http://localhost:3005 , backend -> http://localhost:8005
 ```
 
 ### Run the tests
