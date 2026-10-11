@@ -23,11 +23,11 @@ export default function Modal({
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4"
       onClick={onClose}
     >
       <div
-        className="panel max-h-[85vh] w-full max-w-lg overflow-y-auto border-accent/20 p-5 shadow-neon"
+        className="panel max-h-[85vh] w-full max-w-lg overflow-y-auto border-accent/25 p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-start justify-between gap-4">

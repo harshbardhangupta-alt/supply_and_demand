@@ -8,18 +8,12 @@
 
 html,
 body {
-  background-color: #05070a;
-  color: #e9f2ec;
+  background-color: #0c0d0f;
+  color: #e9ebee;
 }
 
 body {
   font-feature-settings: "tnum" 1;
-  background-image: radial-gradient(
-    1100px 500px at 100% -10%,
-    rgba(43, 255, 136, 0.06),
-    transparent 60%
-  );
-  background-attachment: fixed;
 }
 
 ::-webkit-scrollbar {
@@ -27,7 +21,7 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #17211c;
+  background: #25272d;
   border-radius: 6px;
 }
 ::-webkit-scrollbar-track {
@@ -35,7 +29,7 @@ body {
 }
 
 ::selection {
-  background: rgba(43, 255, 136, 0.25);
+  background: rgba(239, 117, 24, 0.3);
 }
 
 @layer components {
@@ -46,19 +40,19 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-panel2 px-3 py-1.5 text-sm text-txt transition hover:border-accent/60 hover:text-accent disabled:opacity-40 disabled:hover:border-border disabled:hover:text-txt;
   }
   .btn-accent {
-    @apply border-accent/70 bg-accent/10 text-accent hover:shadow-neon;
+    @apply border-accent/70 bg-accent/10 text-accent hover:bg-accent/15;
   }
   .btn-danger {
     @apply border-bear/50 bg-bear/10 text-bear hover:border-bear hover:text-bear;
   }
   .input {
-    @apply rounded-lg border border-border bg-panel2 px-2.5 py-1.5 text-sm text-txt outline-none transition focus:border-accent/70 focus:shadow-neon;
+    @apply rounded-lg border border-border bg-panel2 px-2.5 py-1.5 text-sm text-txt outline-none transition focus:border-accent/70;
   }
   .tag {
     @apply inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium;
   }
   .th {
-    @apply sticky top-0 z-10 bg-panel2 px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-muted;
+    @apply sticky top-0 z-10 bg-panel px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-muted;
   }
   .td {
     @apply whitespace-nowrap px-3 py-2 text-sm;
